@@ -1,8 +1,7 @@
-# frozen_string_literal: true
-
 module Mutations
   class UpdateUser < BaseMutation
-    field :user, Types::UserType, null: false
+    field :user, Types::UserType, null: true
+    field :errors, [String], null: true
 
     argument :id, ID, required: true
     argument :name, String, required: true
@@ -24,7 +23,7 @@ module Mutations
       end
       user = User.find(id)
       if user.update(name: name, email: email, is_admin: is_admin, password: password)
-        { user: user }
+        { user: user}
       else
         raise GraphQL::ExecutionError, user.errors.full_messages.join(", ")
       end

@@ -52,6 +52,11 @@ gem "graphql", "~> 2.3"
 gem "graphiql-rails", "~> 1.10"
 gem 'railties'
 gem "reline", "= 0.5.7"
+group :development, :test do
+  gem 'factory_bot_rails'
+  gem 'rspec-rails'
+  gem 'rails-controller-testing'
+end
 
 gem "zeitwerk", "= 2.6.14"
 gem "jwt"
