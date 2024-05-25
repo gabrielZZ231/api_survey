@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'jwt'
 
 RSpec.describe 'Login', type: :request do
   let(:user) { create(:user, email: 'user@example.com', password: '123456') }
