@@ -25,6 +25,5 @@ module Types
     def survey_not_finished_count
       object.surveys.count - survey_finished_count
     end
-
   end
 end

@@ -1,6 +1,5 @@
 module Mutations
   class DestroyResponse < BaseMutation
-
     field :id, ID, null: true
     field :errors, [String], null: true
 

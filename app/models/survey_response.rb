@@ -4,5 +4,4 @@ class SurveyResponse < ApplicationRecord
   has_many :responses, dependent: :destroy
 
   validates :user_id, :survey_id, presence: true
-
 end

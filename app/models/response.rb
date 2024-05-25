@@ -5,5 +5,4 @@
     belongs_to :question
     has_many :options, dependent: :destroy
     validates :content, :user_id, :question_id, :survey_id, presence: true
-
   end
