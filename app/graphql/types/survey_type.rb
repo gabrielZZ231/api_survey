@@ -18,7 +18,5 @@ module Types
     def survey_not_finished_count
       SurveyResponse.joins(:survey).where(surveys: { finished: false }).count
     end
-
-
   end
 end
