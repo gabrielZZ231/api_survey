@@ -1,24 +1,6 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project is an API developed in Ruby and GraphQL using the Rails framework. I utilized RSpec for application testing, and PostgreSQL serves as the database.
 
-Things you may want to cover:
+![Class diagram](https://github.com/gabrielZZ231/api_survey/assets/52945665/cf12b8c5-a19f-42fc-b703-8d1db4780511)
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
