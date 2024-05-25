@@ -2,12 +2,11 @@ class Mutations::CreateQuestion < Mutations::BaseMutation
   argument :content, String, required: true
   argument :survey_id, ID, required: true
   argument :question_type, String, required: true
-  argument :option_ids, [ID], required: false
 
-  field :question, Types::QuestionType, null: false
-  field :errors, [String], null: false
+  field :question, Types::QuestionType, null: true
+  field :errors, [String], null: true
 
-  def resolve(content:, survey_id:, question_type:, option_ids:)
+  def resolve(content:, survey_id:, question_type:)
       if context[:current_user].nil?
           return {
             question: nil,
@@ -16,12 +15,11 @@ class Mutations::CreateQuestion < Mutations::BaseMutation
         elsif !context[:current_user].is_admin?
           return {
             question: nil,
-            errors: ['You must be an administrator to create a new Question']
+            errors: ['You must be an administrator to create a new question']
           }
         end
 
-      options = Option.where(id: option_ids)
-      question = Question.new(content: content, survey_id: survey_id, question_type: question_type, options: options)
+      question = Question.new(content: content, survey_id: survey_id, question_type: question_type)
 
       if question.save
           {

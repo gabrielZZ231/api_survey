@@ -6,10 +6,11 @@ class Mutations::CreateResponse < Mutations::BaseMutation
     argument :survey_response_id, ID, required: true
     argument :option_ids, [ID], required: false
 
-    field :response, Types::ResponseType, null: false
-    field :errors, [String], null: false
+    field :response, Types::ResponseType, null: true
+    field :errors, [String], null: true
 
     def resolve(content:, user_id:, question_id:, survey_id:, survey_response_id:, option_ids:)
+
         if context[:current_user].nil?
             return {
               response: nil,

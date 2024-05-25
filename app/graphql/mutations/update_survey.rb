@@ -1,6 +1,7 @@
 module Mutations
   class UpdateSurvey < BaseMutation
-    field :survey, Types::SurveyType, null: false
+    field :survey, Types::SurveyType, null: true
+    field :errors, [String], null: true
 
     argument :id, ID, required: true
     argument :title, String, required: true
@@ -16,9 +17,10 @@ module Mutations
       elsif !context[:current_user].is_admin?
         return {
           survey: nil,
-          errors: ['You must be an administrator to update a Survey']
+          errors: ['You must be an administrator to update a survey']
         }
       end
+
       survey = Survey.find(id)
       if survey.update(title: title, user_id: user_id, finished: finished)
         { survey: survey }

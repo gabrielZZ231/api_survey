@@ -4,8 +4,8 @@ class Mutations::CreateUser < Mutations::BaseMutation
     argument :is_admin, Boolean, required: true
     argument :password, String, required: true
 
-    field :user, Types::UserType, null: false
-    field :errors, [String], null: false
+    field :user, Types::UserType, null: true
+    field :errors, [String], null: true
 
     def resolve(name:, email:, is_admin:, password:)
       if context[:current_user].nil?
@@ -37,10 +37,7 @@ class Mutations::CreateUser < Mutations::BaseMutation
         errors: []
       }
       else
-      {
-        user: nil,
-        errors: user.errors.full_messages
-      }
+        raise GraphQL::ExecutionError, user.errors.full_messages.join(", ")
       end
     end
 end

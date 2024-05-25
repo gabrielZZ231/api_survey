@@ -3,8 +3,8 @@ class Mutations::CreateSurvey < Mutations::BaseMutation
   argument :user_id, ID, required: true
   argument :finished, Boolean, required: false
 
-  field :survey, Types::SurveyType, null: false
-  field :errors, [String], null: false
+  field :survey, Types::SurveyType, null: true
+  field :errors, [String], null: true
 
   def resolve(title:, user_id:, finished: false)
       if context[:current_user].nil?
@@ -15,7 +15,7 @@ class Mutations::CreateSurvey < Mutations::BaseMutation
         elsif !context[:current_user].is_admin?
           return {
             survey: nil,
-            errors: ['You must be an administrator to create a new Survey']
+            errors: ['You must be an administrator to create a new survey']
           }
         end
 
@@ -27,10 +27,7 @@ class Mutations::CreateSurvey < Mutations::BaseMutation
               errors: []
           }
       else
-          {
-              survey: nil,
-              errors: survey.errors.full_messages
-          }
+        raise GraphQL::ExecutionError, user.errors.full_messages.join(", ")
       end
   end
 end

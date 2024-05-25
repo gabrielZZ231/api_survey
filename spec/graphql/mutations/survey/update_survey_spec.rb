@@ -7,39 +7,39 @@ def generate_jwt_token(user_id)
   JWT.encode(payload, secret_key, 'HS256')
 end
 
-RSpec.describe 'UpdateUser mutation', type: :request do
+RSpec.describe 'UpdateSurvey mutation', type: :request do
   let(:admin_user) { create(:user, is_admin: true) }
 
-  it 'updates an existing user' do
-    user_to_update = create(:user, id: 2)
+  it 'updates a survey when authorized' do
+    survey_to_update = create(:survey)
 
     jwt_token = generate_jwt_token(admin_user.id)
 
     post '/graphql', params: {
       query: <<~GRAPHQL
         mutation {
-          updateUser(input: {
-            id: #{user_to_update.id},
-            name: "gabriel",
-            email: "g@321g.com",
-            isAdmin: false,
-            password: "123456"
+          updateSurvey(input: {
+            id: #{survey_to_update.id},
+            title: "Updated Survey Title",
+            userId: #{survey_to_update.user_id},
+            finished: true
           }) {
-            user {
+            survey {
               id
-              name
-              email
+              title
+              user{
+                id
+              }
+              finished
             }
             errors
           }
         }
       GRAPHQL
     }, headers: { 'Authorization' => jwt_token }
-
     expect(response).to have_http_status(:success)
     json_response = JSON.parse(response.body)
-    expect(json_response['data']['updateUser']['user']['email']).to eq('g@321g.com')
-    expect(json_response['data']['updateUser']['errors']).to be_nil
+    expect(json_response['data']['updateSurvey']['survey']['title']).to eq('Updated Survey Title')
   end
 
   it 'returns an error when user is not an administrator' do
@@ -50,17 +50,19 @@ RSpec.describe 'UpdateUser mutation', type: :request do
     post '/graphql', params: {
       query: <<~GRAPHQL
         mutation {
-          updateUser(input: {
+          updateSurvey(input: {
             id: 20,
-            name: "gabriel",
-            email: "g@321g.com",
-            isAdmin: false,
-            password: "123456"
+            title: "Updated Survey Title",
+            userId: 1,
+            finished: true
           }) {
-            user {
+            survey {
               id
-              name
-              email
+              title
+              user{
+                id
+              }
+              finished
             }
             errors
           }
@@ -70,23 +72,27 @@ RSpec.describe 'UpdateUser mutation', type: :request do
 
     expect(response).to have_http_status(:success)
     json_response = JSON.parse(response.body)
-    expect(json_response['data']['updateUser']['errors']).to eq(['You must be an administrator to update a new user'])  end
+    expect(json_response['data']['updateSurvey']['errors']).to eq(['You must be an administrator to update a survey'])
+  end
 
   it 'returns an error when user is not logged in' do
+    survey_to_update = create(:survey)
     post '/graphql', params: {
       query: <<~GRAPHQL
         mutation {
-          updateUser(input: {
-            id: 3,
-            name: "gabriel",
-            email: "g@321g.com",
-            isAdmin: false,
-            password: "123456"
+          updateSurvey(input: {
+            id: #{survey_to_update.id},
+            title: "Updated Survey Title",
+            userId: 1,
+            finished: true
           }) {
-            user {
+            survey {
               id
-              name
-              email
+              title
+              user{
+                id
+              }
+              finished
             }
             errors
           }
@@ -96,6 +102,6 @@ RSpec.describe 'UpdateUser mutation', type: :request do
 
     expect(response).to have_http_status(:success)
     json_response = JSON.parse(response.body)
-    expect(json_response['data']['updateUser']['errors']).to eq(['Authentication required'])
+    expect(json_response['data']['updateSurvey']['errors']).to eq(['Authentication required'])
   end
 end

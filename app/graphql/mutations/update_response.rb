@@ -1,6 +1,7 @@
 module Mutations
   class UpdateResponse < BaseMutation
-    field :response, Types::ResponseType, null: false
+    field :response, Types::ResponseType, null: true
+    field :errors, [String], null: true
 
     argument :id, ID, required: true
     argument :content, String, required: true
